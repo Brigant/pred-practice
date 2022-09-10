@@ -19,7 +19,6 @@ func main() {
 
 func answerRandom(w http.ResponseWriter, r *http.Request) {
 	req := r.URL.Query()
-
 	if len(req) == 2 {
 		min, err := strconv.Atoi(req["min"][0])
 		if err != nil {

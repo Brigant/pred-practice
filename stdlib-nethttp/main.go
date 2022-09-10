@@ -8,26 +8,24 @@ import (
 	"strconv"
 )
 
-func main() {
-	http.HandleFunc("/random/", answerRandom)
-	http.HandleFunc("/random", answerRandom)
+const serverAddress = ":8081"
 
-	http.ListenAndServe(":8081", nil)
+func main() {
+	http.HandleFunc("/random", answerRandom)
+	// http.HandleFunc("/random", answerRandom)
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK) // 200
+		fmt.Fprintln(w, r)
+	})
+
+	http.ListenAndServe(serverAddress, nil)
 }
 
 // return random number between specified min and max
 func answerRandom(w http.ResponseWriter, req *http.Request) {
-	log.Println(req.URL.Path)
-	log.Println(req.Method)
-	log.Println(req.URL.Query())
-
-	if req.URL.Path != "/random/" {
-		http.Error(w, "404 not found or try /random/ with parameters", http.StatusNotFound)
-		return
-	}
-
 	switch req.Method {
-	case http.MethodGet:
+	case http.MethodGet: // "GET"
 		r := req.URL.Query()
 		if len(r) == 2 {
 			min, err := strconv.Atoi(r["min"][0])
